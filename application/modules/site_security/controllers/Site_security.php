@@ -5,6 +5,8 @@
 		{
 			parent::__construct();
 			$this->load->module('site_cookies');
+			$this->load->library('encryption');
+
 		}
 
 		// function test()
@@ -81,6 +83,18 @@
 			return $result; //TRUE or FALSE
 		}
 
+		public function _encrypt_string($str) //ma hoa chuoi
+		{
+			$encrypted_str = $this->encryption->encrypt($str);
+			return $encrypted_str;
+		}	
+
+		public function _decrypt_string($str) //giai ma chuoi
+		{
+			$decrypted_str = $this->encryption->decrypt($str);
+			return $decrypted_str;
+		}	
+
 		// public function generate_random_string($length)
 		// {
 	 //        $characters = '23456789abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ';
@@ -106,14 +120,14 @@
 		public function _make_sure_is_admin()
 		{
 
-			$is_admin = $this->session->userdata('is_admin');
-			if($is_admin == 1)
-			{
-				return TRUE;
-			} else
-			{
-				redirect(base_url('/site_security/not_allowed'));
-			}
+			// $is_admin = $this->session->userdata('is_admin');
+			// if($is_admin == 1)
+			// {
+			// 	return TRUE;
+			// } else
+			// {
+			// 	redirect(base_url('/site_security/not_allowed'));
+			// }
 
 		}
 

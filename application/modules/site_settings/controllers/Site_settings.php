@@ -26,6 +26,18 @@
 			return $telnum;
 		}
 
+		public function _get_paypal_email()
+		{
+			$email = 'duy.doan.tdm@gmail.com';
+			return $email;
+		}
+
+		public function _get_currency_code()
+		{
+			$code = 'VND';
+			return $code;
+		}
+
 		public function _get_our_name()
 		{
 			$name = 'shopbinandjenny';

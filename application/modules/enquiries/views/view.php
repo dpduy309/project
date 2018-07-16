@@ -1,3 +1,6 @@
+<?php  
+	$form_location = base_url('comments/submit');
+?>
 <h1><?= $headline ?></h1>
 <?= validation_errors("<p style = 'color: red;'>","</p>") ?>
 
@@ -41,6 +44,48 @@
 	<a href="<?= base_url('enquiries/create/')?><?= $update_id?>">
 		<button type="button" class="btn btn-primary">Reply To This Message</button>
 	</a>
+
+	<!-- Button trigger modal -->
+	<button type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleModal">
+	  Create New Comment
+	</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Create Comment</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal" action="<?= $form_location ?>" method="post">
+			<p>
+				<div class="control-group">
+				    <label class="control-label" for="inputComment">Comment</label>
+				    <div class="controls">
+				    	<textarea rows="6" name="comment"></textarea>
+				    </div>
+			  	</div>
+			</p> 
+      </div>
+      <div class="modal-footer">
+        <button  class="btn btn-secondary" data-dismiss="modal" aria-hidden="true">Close</button>
+        <button  class="btn btn-primary">Save changes</button>
+      </div>
+
+      <?php  
+      	echo form_hidden('comment_type','e');
+      	echo form_hidden('update_id',$update_id);
+      ?>
+	</form>	
+
+    </div>
+  </div>
+</div>
+
 </p>	
 
 <div class="row-fluid sortable">
@@ -118,3 +163,11 @@
 		</div>
 	</div>
 </div>
+
+<?php 
+
+echo Modules::run('comments/_draw_comments','e',$update_id);
+
+
+
+?>

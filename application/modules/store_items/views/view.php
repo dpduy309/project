@@ -1,5 +1,8 @@
 <?php  
 	echo Modules::run('templates/_draw_breadcrumbs',$breadcrumbs_data);
+	if(isset($flash)){
+		echo $flash;
+	}
 ?>
 
 
@@ -11,6 +14,7 @@
 	</div>
 	<div class="col-md-4">
 		<h1><?php echo $item_title; ?></h1>
+		<h4><?= 'Our Price: '.$item_price ?></h4>
 		<div style="clear: both;">
 		<?= nl2br($item_description) ?>
 		</div>

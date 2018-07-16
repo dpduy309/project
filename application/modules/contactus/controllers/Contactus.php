@@ -9,15 +9,23 @@
 			$this->load->module('site_security');
 			$this->load->module('site_settings');
 			$this->load->module('enquiries');
-
-
+			$this->load->module('blacklist');
 		}
 
 		public function submit()
 		{
 
 			$submit = $this->input->post('submit',TRUE);
-			if($submit == "Submit")
+			$refer_url = $_SERVER['HTTP_REFERER'];
+			$target_refer_url = base_url('contactus');
+			$firstname = trim($this->input->post('firstname',TRUE));//hidden var
+
+			if($firstname!='')
+			{
+				$this->_blacklist_user();
+			}
+
+			if($submit == "Submit" AND ($refer_url == $target_refer_url))
 			{
 				
 				$this->form_validation->set_rules('yourname','Your Name','required|max_length[60]');
@@ -94,6 +102,13 @@
 			$data['view_file'] = "thankyou";
 
 			$this->templates->public_bootstrap($data);	
+		}
+
+		public function _blacklist_user()
+		{
+			$data['ip_address'] = $this->input->ip_address;
+			$data['date_created'] = time();
+			$this->blacklist->_insert($data);
 		}
 
 	

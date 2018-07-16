@@ -35,7 +35,7 @@
                 <form action="<?= $form_location ?>" method="post">
                 <div class="row">
                     <div class="col-md-6">
-                        <div class="form-group">
+                        <div class="form-group name">
                             <label for="name">
                                 Name</label>
                             <input type="text" name="yourname" value="<?= $yourname?>" class="form-control" id="yourname" placeholder="Enter name" required="required" />
