@@ -1,5 +1,5 @@
-<?php  defined('BASEPATH') OR exit('No direct script access allowed');
-	class Mdl_store_basket extends CI_Model
+<?php  
+	class Mdl_store_orders extends CI_Model
 	{
 		public function __construct()
 		{
@@ -10,7 +10,7 @@
 
 		public function get_table()
 		{
-			$table = "store_basket";
+			$table = "store_orders";
 			return $table;
 		}
 
@@ -43,15 +43,6 @@
 		{
 			$table = $this->get_table();
 			$this->db->where($col,$value);
-			$query = $this->db->get($table);
-			return $query;
-		}
-
-		public function get_with_double_condition($col1,$value1,$col2,$value2)
-		{
-			$table = $this->get_table();
-			$this->db->where($col1,$value1);
-			$this->db->where($col2,$value2);
 			$query = $this->db->get($table);
 			return $query;
 		}

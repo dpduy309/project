@@ -16,11 +16,18 @@
 		<span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
 		Yes - Let's Do It
 	</button>
-	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	<button class="btn btn-danger" name="submit" value="No Thanks" type="submit">
+
+	<button class="btn btn-danger" style="margin-left: 24px" name="submit" value="No Thanks" type="submit">
 		<span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span>
 		No Thanks
 	</button>
+	
+	<a href="<?= base_url('youraccount/login')?>">
+	<button class="btn btn-primary" style="margin-left: 24px" name="submit" type="button">
+		<span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>
+		Already Have Account (Login)
+	</button></a>
+
 <?php 
 echo form_hidden('checkout_token',$checkout_token);
 echo form_close(); ?>

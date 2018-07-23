@@ -8,6 +8,7 @@
 			$this->load->module('site_security');
 			$this->load->module('site_cookies');
 			$this->load->module('store_accounts');
+			$this->load->module('store_basket');
 
 			$this->form_validation->CI =& $this;
 		}
@@ -126,7 +127,31 @@
 
 			}
 
+			//attempt to update cart  and divirt to cart
+			$this->_attempt_cart_divert($user_id);
+
 			redirect(base_url('youraccount/welcome'));
+		}
+
+		public function _attempt_cart_divert($user_id){
+
+			//check session id dung va shopper id = 0 de cap nhat lai shopper id =1
+			$customer_session_id = $this->session->session_id;
+
+			$col1 = 'session_id';
+			$value1 = $customer_session_id;
+			$col2 = 'shopper_id';
+			$value2 = 0;
+			$query = $this->store_basket->get_with_double_condition($col1,$value1,$col2,$value2);
+
+			$num_rows = $query->num_rows();
+			if($num_rows > 0)
+			{
+				//there are records that need corrected
+				$mysql_query = "update store_basket set shopper_id=$user_id where session_id='$customer_session_id'";
+				$query = $this->store_basket->_custom_query($mysql_query);
+				redirect(base_url('cart'));
+			}
 		}
 
 		public function submit()
@@ -144,8 +169,7 @@
 				if($this->form_validation->run() == TRUE)
 				{
 					$this->_process_create_account();
-					echo "<h1>Account Created</h1>"."<p>Please log in</p>";
-					die();
+					redirect(base_url('youraccount/login'));
 				}else{
 					$this->start();
 				}

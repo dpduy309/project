@@ -34,7 +34,7 @@
 
 		public function _get_currency_code()
 		{
-			$code = 'VND';
+			$code = 'USD';
 			return $code;
 		}
 

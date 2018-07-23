@@ -343,6 +343,7 @@
 				<div class="nav-collapse sidebar-nav">
 					<ul class="nav nav-tabs nav-stacked main-menu">
 						<li><a href="<?= base_url('dashboard/home')?>"><i class="icon-bar-chart"></i><span class="hidden-tablet"> Dashboard</span></a></li>	
+						<li><a href="<?= base_url('store_order_status/manage')?>"><i class="icon-file-alt"></i><span class="hidden-tablet"> Order Status Options</span></a></li>	
 						<li><a href="<?= base_url('enquiries/inbox'); ?>"><i class="icon-envelope"></i><span class="hidden-tablet"> Messages</span></a></li>
 						<li><a href="<?= base_url(); ?>store_items/manage"><i class="icon-tag"></i><span class="hidden-tablet"> Manage Item</span></a></li>
 						<li><a href="<?= base_url(); ?>webpages/manage"><i class="icon-file"></i><span class="hidden-tablet"> CMS</span></a></li>

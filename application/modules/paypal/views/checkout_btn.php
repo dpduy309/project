@@ -7,6 +7,10 @@
 	echo form_hidden('currency_code',$currency_code);
 	echo form_hidden('custom',$custom);
 
+	echo form_hidden('return',$return);
+	echo form_hidden('cancel_return',$cancel_return);
+
+
 	$count = 0;
 	foreach ($query->result() as $row) {
 		$count++;
@@ -15,6 +19,8 @@
 		$item_qty = $row->item_qty;
 		$item_size = $row->item_size;
 		$item_colour = $row->item_colour;
+
+		$price = 0.01;
 
 		echo form_hidden('item_name_'.$count, $item_title);
 		echo form_hidden('amount_'.$count, $price);

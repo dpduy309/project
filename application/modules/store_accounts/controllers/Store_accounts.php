@@ -14,6 +14,47 @@
 			$this->form_validation->CI =& $this;
 		}
 
+
+		public function deleteconf($update_id)
+		{
+			if(!is_numeric($update_id))
+			{
+				redirect(base_url('site_security/not_allowed'));
+			} 
+			$this->site_security->_make_sure_is_admin();
+
+			$data['headline'] = 'Delete Account';
+			$data['update_id'] = $update_id;
+			$data['flash'] = $this->session->flashdata('item');
+			$data['view_file'] = "deleteconf";
+
+			$this->templates->admin($data);
+		}
+
+			public function delete($update_id){
+			if(!is_numeric($update_id))
+			{
+				redirect(base_url('site_security/not_allowed'));
+			}
+			$this->site_security->_make_sure_is_admin();
+
+			$submit =$this->input->post('submit');
+			if($submit == 'Cancel')
+			{
+				redirect(base_url('store_accounts/create/'.$update_id));
+			} elseif($submit == 'Yes - Delete')
+			{
+				$this->_delete($update_id);
+
+				$flash_msg = "The store account entry was successfully deleted.";
+				$value = '<div class="alert alert-success" role="alert">'.$flash_msg.'</div>';
+				$this->session->set_flashdata('item',$value);
+			}
+
+				redirect(base_url('store_accounts/manage'));
+
+		}
+
 		public function _generate_token($update_id)
 		{
 			$data = $this->fetch_data_from_db($update_id);

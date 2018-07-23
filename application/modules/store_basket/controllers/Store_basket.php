@@ -16,6 +16,13 @@
 			$this->form_validation->CI =& $this;
 		}
 
+		
+		public function get_with_double_condition($col1,$value1,$col2,$value2)
+		{
+			$query = $this->mdl_store_basket->get_with_double_condition($col1,$value1,$col2,$value2);
+			return $query;
+		}
+
 		public function remove()
 		{
 			$update_id = $this->uri->segment(3);
