@@ -14,6 +14,40 @@
 			$this->form_validation->CI =& $this;
 		}
 
+		public function _get_dropdown_options()
+		{
+			$options[0] = 'Order Submitted';
+
+			$query = $this->get('status_title');
+			foreach ($query->result() as $row) {
+				$options[$row->id] = $row->status_title;
+			}
+
+			return $options;
+		}
+
+		public function _get_status_title($update_id)
+		{
+			$query = $this->get_where($update_id);
+			foreach ($query->result() as $row) {
+				$status_title = $row->status_title;
+			}
+
+			if(!isset($status_title))
+			{
+				$status_title = 'Unknown';
+			}
+
+			return $status_title;
+		}
+
+		public function _draw_left_nav_links()
+		{
+			$data['query_sos'] = $this->get('status_title');
+			$this->load->view('left_nav_links',$data);
+
+		}
+
 		public function deleteconf($update_id)
 		{
 			if(!is_numeric($update_id))
@@ -43,6 +77,16 @@
 				redirect(base_url('store_order_status/create/'.$update_id));
 			} elseif($submit == 'Yes - Delete')
 			{
+				$allowed = $this->_make_sure_delete_allowed($update_id);
+				if($allowed == FALSE)
+				{
+					$flash_msg = "You are not allowed to delete this status option.";
+					$value = '<div class="alert alert-danger" role="alert">'.$flash_msg.'</div>';
+					$this->session->set_flashdata('item',$value);
+
+					redirect(base_url('store_accounts/manage'));
+				}
+
 				$this->_delete($update_id);
 
 				$flash_msg = "The status order option was successfully deleted.";
@@ -54,6 +98,22 @@
 
 		}
 
+		public function _make_sure_delete_allowed($update_id)
+		{
+			//returns TRUE or FALSE
+			//do NOT allow delete IF has an order has this status
+			$mysql_query = "select * from store_orders where order_status='$update_id'";
+			$query = $this->_custom_query($mysql_query);
+			$num_rows = $query->num_rows();
+
+			if($num_rows>0)
+			{
+				return FALSE; //ko xoa duoc vi co item trong gio hang
+			}else
+			{
+				return TRUE;
+			}
+		}
 
 		public function _get_customer_id_from_token($token)
 		{

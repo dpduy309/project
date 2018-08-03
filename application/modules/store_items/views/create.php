@@ -20,22 +20,57 @@ if(is_numeric($update_id)){
 					</div>
 					<div class="box-content">
 					<?php  
+						if($got_gallery_pic==TRUE)
+						{
+							echo '<div class="alert alert-info">';
+							echo "NOTE: You have at least one gallery picture for this item.";
+							echo "</div>";
+							$gallery_btn_theme = 'success';
+							$delete_btn_text = 'Delete Main Image';
+						}else{
+							$gallery_btn_theme = 'primary';
+							$delete_btn_text = 'Delete Item Image';
+						}
+
 						if($big_pic==''){
 					?>
 						<a href="<?= base_url()?>store_items/upload_image/<?= $update_id ?>"><button type="button" class="btn btn-primary">Upload Item Image</button></a>
 					<?php 
 						} else {
 					?>
-						<a href="<?= base_url()?>store_items/delete_image/<?= $update_id ?>"><button type="button" class="btn btn-danger">Delete Item Image</button></a>
+						<a href="<?= base_url()?>store_items/delete_image/<?= $update_id ?>"><button type="button" class="btn btn-danger"><?= $delete_btn_text ?>e</button></a>
 					<?php 
 						} 
 					?>
-
+						<a href="<?= base_url()?>item_galleries/update_group/<?= $update_id ?>"><button type="button" class="btn btn-<?= $gallery_btn_theme ?>">Manage Item Gallery</button></a>
 						<a href="<?= base_url()?>store_item_colours/update/<?= $update_id ?>"><button type="button" class="btn btn-primary">Update Item Colors</button></a>
 						<a href="<?= base_url()?>store_item_sizes/update/<?= $update_id ?>"><button type="button" class="btn btn-primary">Update Item Sizes</button></a>
 						<a href="<?= base_url()?>store_cat_assign/update/<?= $update_id ?>"><button type="button" class="btn btn-primary">Update Item Catagories</button></a>
 						<a href="<?= base_url()?>store_items/deleteconf/<?= $update_id ?>"><button type="button" class="btn btn-danger">Delete Item</button></a>
 						<a href="<?= base_url()?>store_items/view/<?= $update_id ?>"><button type="button" class="btn btn-default">View Item In Shop</button></a>
+
+					</div>
+				</div><!--/span-->
+
+			</div>
+<?php }
+?>
+
+<?php 
+	if($big_pic!='')
+{
+?>
+			<div class="row-fluid sortable">
+				<div class="box span12">
+					<div class="box-header" data-original-title>
+						<h2><i class="halflings-icon white edit"></i><span class="break"></span>Item </h2>
+						<div class="box-icon">
+							<a href="#" class="btn-minimize"><i class="halflings-icon white chevron-up"></i></a>
+							<a href="#" class="btn-close"><i class="halflings-icon white remove"></i></a>
+						</div>
+					</div>
+					<div class="box-content">
+						<img src="<?= base_url()?>big_pics/<?= $big_pic ?>">
 
 					</div>
 				</div><!--/span-->
@@ -120,28 +155,7 @@ if(is_numeric($update_id)){
 
 
 
-<?php 
-	if($big_pic!='')
-{
-?>
-			<div class="row-fluid sortable">
-				<div class="box span12">
-					<div class="box-header" data-original-title>
-						<h2><i class="halflings-icon white edit"></i><span class="break"></span>Item </h2>
-						<div class="box-icon">
-							<a href="#" class="btn-minimize"><i class="halflings-icon white chevron-up"></i></a>
-							<a href="#" class="btn-close"><i class="halflings-icon white remove"></i></a>
-						</div>
-					</div>
-					<div class="box-content">
-						<img src="<?= base_url()?>big_pics/<?= $big_pic ?>">
 
-					</div>
-				</div><!--/span-->
-
-			</div>
-<?php }
-?>
 
 
 

@@ -7,6 +7,7 @@
 
 			$this->load->module('templates');
 			$this->load->module('site_security');
+			$this->load->module('site_settings');
 			$this->load->module('store_accounts');
 			$this->load->model('mdl_enquiries');
 			
@@ -78,7 +79,15 @@
 			$data['folder_type'] = ucfirst($folder_type);
 
 			$data['flash'] = $this->session->flashdata('item');
-			$this->load->view('customer_inbox',$data);
+
+			$is_mobile = $this->site_settings->is_mobile();
+			$view_file = 'customer_inbox';
+			if($is_mobile == TRUE)
+			{
+				$view_file .= '_jqm';
+			}
+
+			$this->load->view($view_file,$data);
 
 		}
 

@@ -82,6 +82,8 @@
 
 		public function index()
 		{
+			$is_mobile = $this->site_settings->is_mobile();
+
 			$data = $this->fetch_data_from_post();
 			$data['address'] = $this->site_settings->_get_our_address();
 			$data['our_telnum'] = $this->site_settings->_get_our_telnum();
@@ -91,17 +93,33 @@
 			$data['flash'] = $this->session->flashdata('item');
 			$data['view_file'] = "contactus";
 
-			$this->templates->public_bootstrap($data);	
+			if($is_mobile == FALSE)
+			{
+				$template = 'public_bootstrap';
+			}else{
+				$template = 'public_jqm';
+				$data['view_file'] .= "_jqm";
+			}
+
+			$this->templates->$template($data);	
 		}
 
 
 		public function thankyou()
 		{
+			$is_mobile = $this->site_settings->is_mobile();
 
-	
 			$data['view_file'] = "thankyou";
 
-			$this->templates->public_bootstrap($data);	
+			if($is_mobile == FALSE)
+			{
+				$template = 'public_bootstrap';
+			}else{
+				$template = 'public_jqm';
+				$data['view_file'] .= "_jqm";
+			}
+
+			$this->templates->template($data);	
 		}
 
 		public function _blacklist_user()

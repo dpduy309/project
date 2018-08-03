@@ -7,6 +7,14 @@
 			$this->load->module('store_account');
 		}
 
+		public function is_mobile()
+		{
+			$this->load->library('user_agent');
+			$is_mobile = $this->agent->is_mobile();
+			//$is_mobile=TRUE;
+			return $is_mobile; //true or false
+		}
+
 		public function _get_map_code()
 		{
 			$code = '<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.157934091906!2d106.73054795021442!3d10.799213261688307!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3175261adbee8aa3%3A0x952d7c5fe8147dbe!2zMTcgWGEgbOG7mSBIw6AgTuG7mWksIEFuIFBow7osIFF14bqtbiAyLCBI4buTIENow60gTWluaCwgVmnhu4d0IE5hbQ!5e0!3m2!1svi!2s!4v1528118477163" width="600" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>';

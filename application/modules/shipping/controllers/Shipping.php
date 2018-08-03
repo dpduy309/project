@@ -8,7 +8,7 @@
 
 		public function _get_shipping()
 		{
-			$shipping = 20;
+			$shipping = 0.01;
 			return $shipping;
 		}
 	}

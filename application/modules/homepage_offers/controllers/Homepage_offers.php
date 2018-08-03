@@ -14,9 +14,13 @@
 			$this->form_validation->CI =& $this;
 		}
 
-		public function _draw_offers($block_id,$theme){
-			$query = $this->get_where_custom('block_id', $block_id);
-$mysql_query = "SELECT store_items.* FROM homepage_offers INNER JOIN homepage_blocks ON homepage_offers.block_id = homepage_blocks.id INNER JOIN store_items ON homepage_offers.item_id = store_items.id WHERE Homepage_offers.block_id = $block_id";
+		public function _draw_offers($block_id,$theme,$is_mobile=FALSE){
+			//$query = $this->get_where_custom('block_id', $block_id);
+			$mysql_query = "
+			SELECT store_items.* FROM homepage_offers 
+			INNER JOIN homepage_blocks ON homepage_offers.block_id = homepage_blocks.id 
+			INNER JOIN store_items ON homepage_offers.item_id = store_items.id 
+			WHERE Homepage_offers.block_id = $block_id";
 			
 			$query = $this->_custom_query($mysql_query);
 
@@ -26,7 +30,16 @@ $mysql_query = "SELECT store_items.* FROM homepage_offers INNER JOIN homepage_bl
 			{
 				$data['query'] = $query;
 				$data['theme'] = $theme;
-				$this->load->view('offers', $data);
+
+				if($is_mobile==FALSE)
+				{
+					$view_file = 'offers';
+				}else{
+					$view_file = 'offers_jqm';
+				}
+
+
+				$this->load->view($view_file, $data);
 			}
 		}
 

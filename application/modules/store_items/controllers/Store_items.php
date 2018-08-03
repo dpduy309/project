@@ -13,6 +13,7 @@
 			$this->load->module('store_item_sizes');
 			$this->load->module('store_cat_assign');
 			$this->load->module('store_categories');
+			$this->load->module('item_galleries');
 
 
 			$this->load->model('mdl_store_items');
@@ -21,6 +22,12 @@
 			$this->form_validation->CI =& $this;
 		}
 
+		public function _get_title($update_id)
+		{
+			$data = $this->fetch_data_from_db($update_id);
+			$item_title = $data['item_title'];
+			return $item_title;
+		}
 
 		public function view($update_id)
 		{
@@ -29,9 +36,34 @@
 				redirect(base_url('site_security/not_allowed'));
 			}
 			$this->site_security->_make_sure_is_admin();
+
+			$is_mobile = $this->site_settings->is_mobile();			
+
 			
 			//fetch the item details
 			$data = $this->fetch_data_from_db($update_id);
+
+			$query_gallery_pics = $this->_get_gallery_pics($update_id);
+			$num_rows = $query_gallery_pics->num_rows();
+			if($num_rows>0)
+			{
+				//co it nhat 1 gallery pic
+				$data['use_angularjs'] = TRUE;
+
+				//build an array of all gallery pics
+				$count = 0;
+				foreach ($query_gallery_pics->result() as $row) {
+					$gallery_pics[$count] = base_url('item_galleries_pics/'.$row->picture);
+					$count++;
+				}
+				$data['gallery_pics'] = $gallery_pics;
+				$data['view_file'] = 'view_gallery_version';
+
+			}else{
+				//load normal page
+				$data['view_file'] = 'view';
+
+			}
 
 			$breadcrumbs_data['template'] = 'public_bootstrap';
 			$breadcrumbs_data['current_page_title'] = $data['item_title'];
@@ -40,10 +72,17 @@
 
 			$data['update_id'] = $update_id;
 			$data['flash'] = $this->session->flashdata('item');
+			$data['use_featherlight'] = TRUE;
 			$data['view_module'] = "store_items";
-			$data['view_file'] = "view";
-
-			$this->templates->public_bootstrap($data);	
+			
+			if($is_mobile == FALSE)
+			{
+				$template = 'public_bootstrap';
+			}else{
+				$template = 'public_jqm';
+				$data['view_file'] .= '_jqm';
+			}
+			$this->templates->$template($data);	
 		}
 
 		public function _generate_breadcrumbs_array($update_id)
@@ -375,7 +414,7 @@
 				$data['headline'] = 'Update Item';
 			}
 
-
+			$data['got_gallery_pic'] = $this->_got_gallery_pic($update_id);
 			$data['update_id'] = $update_id;
 			$data['flash'] = $this->session->flashdata('item');
 			//$data['view_module'] = "store_items";
@@ -383,6 +422,24 @@
 
 			$this->templates->admin($data);
 
+		}
+
+		public function _got_gallery_pic($update_id)
+		{
+			$query = $this->item_galleries->get_where_custom('parent_id',$update_id);
+			$num_rows = $query->num_rows();
+			if($num_rows>0)
+			{
+				return TRUE; //co it nhat 1 hinh anh
+			}else{
+				return FALSE;
+			}
+		}
+
+		public function _get_gallery_pics($update_id)
+		{
+			$query = $this->item_galleries->get_where_custom('parent_id',$update_id);
+			return $query;
 		}
 
 		public function manage()

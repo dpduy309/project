@@ -1,3 +1,6 @@
+<?php  
+	$first_bit = $this->uri->segment(1);
+?>
 <div class="row">
 	<div class="col-md-10 offset-md-1">
 
@@ -13,7 +16,7 @@
 			<td class="col-md-2">
 				<?php 
 					if($row->small_pic!=''){ ?>
-						<img src="<?= base_url('small_pics/'.$row->small_pic);?>">
+						<img class="img-fluid" src="<?= base_url('small_pics/'.$row->small_pic);?>">
 					<?php
 					}else{
 						echo "No image";
@@ -27,7 +30,10 @@
 				Quantity: <?= $row->item_qty ?><br><br>
 
 				<?php  
-					echo anchor('store_basket/remove/'.$row->id, 'Remove');
+					if($first_bit!='yourorders')
+					{
+						echo anchor('store_basket/remove/'.$row->id, 'Remove');
+					}
 				?>
 			</td>
 			<td class="col-md-2"><?= $sub_total_desc ?></td>

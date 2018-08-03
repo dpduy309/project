@@ -12,7 +12,35 @@
 			$this->load->module('store_items');
 			$this->load->module('shipping');
 			$this->load->module('paypal');
+			$this->load->module('store_accounts');
 
+
+		}
+
+		public function _calc_cart_total($cart_data)
+		{
+			$shopper_id = $cart_data['shopper_id'];
+			$customer_session_id = $cart_data['customer_session_id'];
+			$table = $cart_data['table'];
+			$add_shipping = $cart_data['add_shipping'];
+
+			$query = $this->_fetch_cart_contents($customer_session_id,$shopper_id,$table);
+
+			$grand_total = 0;
+			foreach ($query->result() as $row) {
+				$sub_total = $row->price*$row->item_qty;
+				$grand_total = $grand_total + $sub_total;
+			}
+
+			if($add_shipping == TRUE)
+			{
+				$shipping = $this->shipping->_get_shipping();
+			}else{
+				$shipping = 0;
+			}
+
+			$grand_total = $grand_total + $shipping;
+			return $grand_total;
 		}
 
 		public function _check_and_get_session_id($checkout_token)
@@ -56,12 +84,39 @@
 			return $session_id;
 		}
 
+		public function _generate_guest_account($checkout_token)
+		{
+			//customer has selected No Thanks
+			$customer_session_id = $this->_get_session_id_from_token($checkout_token);
+
+			//create guest account
+			$ref = $this->site_security->generate_random_string(4);
+			$data['username'] = 'Guest'.$ref;
+			$data['firstname'] = 'Guest';
+			$data['lastname'] = 'Account';
+			$data['date_made'] = time();
+			$data['pword'] = $checkout_token; //security
+			$this->store_accounts->_insert($data);
+
+			//get the new account ID
+			$new_account_id = $this->store_accounts->get_max();
+			foreach ($new_account_id->result() as $row) {
+				$new_account_id = $row->id;
+			}
+
+			$mysql_query = "update store_basket set shopper_id='$new_account_id' ";
+			$mysql_query.= "where session_id='$customer_session_id'";
+			$query = $this->store_accounts->_custom_query($mysql_query);
+
+		}
+
 		public function submit_choice()
 		{
 			$submit = $this->input->post('submit', TRUE);
 			if($submit == "No Thanks")
 			{
 				$checkout_token = $this->input->post('checkout_token',TRUE);
+				$this->_generate_guest_account($checkout_token);
 				redirect(base_url('cart/index/'.$checkout_token));
 			}elseif ($submit == "Yes - Let's Do It") {
 				redirect(base_url('youraccount/start'));
@@ -120,7 +175,7 @@
 		{
 			//user_type can be admin or public
 
-			if($user_type = 'public')
+			if($user_type == 'public')
 			{
 				$view_file = 'cart_contents_public';
 			}else{

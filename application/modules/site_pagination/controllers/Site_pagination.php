@@ -21,6 +21,9 @@
 			if($template == "public_bootstrap")
 			{
 				$settings = $this->get_settings_for_public_bootstrap();
+			}elseif($template == "admin")
+			{
+				$settings = $this->get_settings_for_admin();
 			}
 
 			$config['base_url'] = $target_base_url; 
@@ -115,6 +118,55 @@
 
 			return $settings;
 		}
+
+		public function get_settings_for_admin()
+		{
+			$settings['num_links'] = 10;
+
+			$settings['full_tag_open'] = '<div class="pagination pagination-centered"><ul>';
+			$settings['full_tag_close'] = '</ul></div>';
+
+			$settings['cur_tag_open'] = '<li class="disabled page-item"><a class="page-link"  href="#">';
+			$settings['cur_tag_close'] = '</a></li>';
+
+			$settings['num_tag_open'] = '<li class="page-item"><a class="page-link"';
+			$settings['num_tag_close'] = '</a></li>';
+
+			$settings['first_link'] = 'First';
+			$settings['first_tag_open'] = '<li class="page-item"><a class="page-link"';
+			$settings['first_tag_close'] = '</a></li>';
+
+			$settings['last_link'] = 'Last';
+			$settings['last_tag_open'] = '<li class="page-item"><a class="page-link"';
+			$settings['last_tag_close'] = '</a></li>';
+
+			$settings['prev_link'] = 'Prev';
+			$settings['prev_tag_open'] = '<li class="page-item"><a class="page-link"';
+			$settings['prev_tag_close'] = '</a></li>';
+
+			$settings['next_link'] = 'Next';
+			$settings['next_tag_open'] = '<li class="page-item"><a class="page-link"';
+			$settings['next_tag_close'] = '</a></li>';
+
+			return $settings;
+		}
+
+
+
+		/*
+		<div class="pagination pagination-centered">
+						  <ul>
+							<li><a href="#">Prev</a></li>
+							<li class="active">
+							  <a href="#">1</a>
+							</li>
+							<li><a href="#">2</a></li>
+							<li><a href="#">3</a></li>
+							<li><a href="#">4</a></li>
+							<li><a href="#">Next</a></li>
+						  </ul>
+						</div> 
+		*/
 
 
 	}

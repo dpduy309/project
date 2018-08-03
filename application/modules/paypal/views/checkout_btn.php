@@ -20,7 +20,7 @@
 		$item_size = $row->item_size;
 		$item_colour = $row->item_colour;
 
-		$price = 0.01;
+		
 
 		echo form_hidden('item_name_'.$count, $item_title);
 		echo form_hidden('amount_'.$count, $price);
@@ -53,4 +53,18 @@
 </div>
 <?php
 	echo form_close();
+
+	if($on_test_mode == TRUE)
+	{
+		echo "<div style='clear: both; text-align: center; margin-top: 24px;'>";
+		echo form_open('paypal/submit_test');
+		echo "Enter number of orders you'd like to simulate: ";
+		echo form_input('num_orders');
+		echo form_submit('submit', 'Submit');
+		echo form_hidden('custom',$custom);
+		echo form_close();
+		echo "</div>";
+	}
+
+
 ?>

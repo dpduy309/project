@@ -30,6 +30,14 @@
 			return $query;
 		}
 
+		public function get_max()
+		{
+			$table = $this->get_table();
+			$this->db->select_max('id');
+			$query = $this->db->get($table);
+			return $query;
+		}
+
 		public function get_with_limit($limit,$offset,$order_by)
 		{
 			$table = $this->get_table();

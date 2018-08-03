@@ -14,7 +14,7 @@
     <a class="nav-link" <?= _attempt_make_active('Your Messages')?> href="<?= base_url('youraccount/welcome');?>">Your Messages</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" href="#">Your Orders</a>
+    <a class="nav-link" href="<?= base_url('yourorders/browse');?>">Your Orders</a>
   </li>
   <li class="nav-item">
     <a class="nav-link" href="#">Update Your Profile</a>

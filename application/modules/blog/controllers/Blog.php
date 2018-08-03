@@ -16,11 +16,19 @@
 			$this->form_validation->CI =& $this;
 		}
 
-		public function _draw_feed_hp()
+		public function _draw_feed_hp($is_mobile=FALSE)
 		{
 			$mysql_query = "select * from blog order by date_published desc limit 0,3";
 			$data['query'] = $this->_custom_query($mysql_query);
-			$this->load->view('feed_hp',$data);
+
+			if($is_mobile == FALSE)
+			{
+				$view_file = 'feed_hp';
+			}else{
+				$view_file = 'feed_hp_jqm';
+			}
+
+			$this->load->view($view_file,$data);
 		}
 
 		public function delete_image($update_id)
@@ -239,7 +247,7 @@
 					//->unix timestamp
 					// $data['date_published'] = $this->timedate->make_timestamp_from_datepicker_us($data['date_published']);
 					$data['date_published'] = $this->timedate->make_timestamp_from_datepicker_us($data['date_published']);
-
+					$data['picture'] = "";
 
 					if(is_numeric($update_id))
 					{	
@@ -283,7 +291,7 @@
 				//chac chan la unix time -> convert lai thanh date format
 				$data['date_published'] = $this->timedate->get_nice_date($data['date_published'], 'datepicker_us');
 			}
-
+			
 			$data['update_id'] = $update_id;
 			$data['flash'] = $this->session->flashdata('item');
 			//$data['view_module'] = "store_items";

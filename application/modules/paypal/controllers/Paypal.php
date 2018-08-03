@@ -10,11 +10,53 @@
 			$this->load->module('site_settings');
 			$this->load->module('shipping');
 			$this->load->module('store_orders');
+			$this->load->module('store_basket');
 
 
 			$this->load->model('mdl_paypal');
 			
 
+		}
+
+		public function submit_test()
+		{
+			$on_test_mode = $this->_is_on_test_mode();
+			$num_orders = $this->input->post('num_orders',TRUE);
+			$custom = $this->input->post('custom', TRUE);
+
+			if(($on_test_mode == FALSE) OR (!is_numeric($num_orders)))
+			{
+				die(); //not allowed
+			}
+
+			//simulate order creation
+			$paypal_id = 55;
+			$customer_session_id = $this->site_security->_decrypt_string($custom);
+
+			$query = $this->store_basket->get_where_custom('session_id', $customer_session_id);
+
+			foreach ($query->result() as $row) {
+				$store_basket_data['session_id'] = $row->session_id;
+				$store_basket_data['item_title'] = $row->item_title;
+				$store_basket_data['price'] = $row->price;
+				$store_basket_data['tax'] = $row->tax;
+				$store_basket_data['item_id'] = $row->item_id;
+				$store_basket_data['item_size'] = $row->item_size;
+				$store_basket_data['item_qty'] = $row->item_qty;
+				$store_basket_data['item_colour'] = $row->item_colour;
+				$store_basket_data['date_added'] = $row->date_added;
+				$store_basket_data['shopper_id'] = $row->shopper_id;
+				$store_basket_data['ip_address'] = $row->ip_address;
+
+			}
+
+			for($i = 0; $i < $num_orders; $i++)
+			{
+				$this->store_orders->_auto_generate_order($paypal_id, $customer_session_id);
+				$this->store_basket->_insert($store_basket_data);
+			}
+
+			echo "Finish";
 		}
 
 		public function ipn_listener()
@@ -81,6 +123,7 @@
 						$value = $customer_session_id;
 					}
 
+					
 					$posted_information .= 'key of '.$key.' was posted with a value of '.$value.'<br>'; 
 				}
 
@@ -104,7 +147,7 @@
 
 		public function _is_on_test_mode()
 		{
-			return FALSE;
+			return TRUE;
 		}
 
 		public function thankyou()
@@ -135,6 +178,7 @@
 				$data['form_location'] = 'https://www.paypal.com/cgi-bin/webscr';
 			}
 
+			$data['on_test_mode'] = $on_test_mode;
 			$data['return'] = base_url('paypal/thankyou');
 			$data['cancel_return'] = base_url('paypal/cancel');
 			$data['shipping'] = $this->shipping->_get_shipping();

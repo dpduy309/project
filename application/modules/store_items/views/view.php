@@ -10,7 +10,9 @@
 
 <div class="row" style="margin-top: 24px;">
 	<div class="col-md-4">
-		<img src="<?= base_url();?>big_pics/<?= $big_pic ?>" class="img-fluid" alt="<?= $item_title ?>">
+		<a href="#" data-featherlight="<?= base_url();?>big_pics/<?= $big_pic ?>">
+			<img src="<?= base_url();?>big_pics/<?= $big_pic ?>" class="img-fluid" alt="<?= $item_title ?>">
+		</a>
 	</div>
 	<div class="col-md-4">
 		<h1><?php echo $item_title; ?></h1>

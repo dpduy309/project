@@ -6,6 +6,7 @@
 			parent::__construct();
 			$this->load->module('templates');
 			$this->load->module('site_security');
+			$this->load->module('site_settings');
 			$this->load->module('site_cookies');
 			$this->load->module('store_accounts');
 			$this->load->module('store_basket');
@@ -25,9 +26,17 @@
 		public function welcome()
 		{
 			$this->site_security->_make_sure_logged_in();
+			$is_mobile = $this->site_settings->is_mobile();
+			if($is_mobile == TRUE)
+			{
+				$template = 'public_jqm';
+			}else{
+				$template = 'public_bootstrap';
+			}
+
 			$data['flash'] = $this->session->flashdata('item');
 			$data['view_file'] = "welcome";
-			$this->templates->public_bootstrap($data);
+			$this->templates->$template($data);
 		}
 
 		public function test1()

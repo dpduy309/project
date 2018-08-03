@@ -7,6 +7,7 @@
 			parent::__construct();
 			$this->load->module('webpages');
 			$this->load->module('templates');
+			$this->load->module('site_settings');
 
 		}
 
@@ -31,7 +32,16 @@
 			}else{
 				$data['page_content'] = "<h1>It's a webpage but not as we know it!</h1>";
 			} 
-			$this->templates->public_bootstrap($data);
+
+			$is_mobile = $this->site_settings->is_mobile();
+			if($is_mobile==TRUE)
+			{
+				$template = 'public_jqm';
+			}else{
+				$template = 'public_bootstrap';
+			}
+
+			$this->templates->$template($data);
 				
 		}
 

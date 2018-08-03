@@ -71,13 +71,21 @@
 			$this->load->view('sortable_list',$data);
 		}
 
-		public function _draw_blocks()
+		public function _draw_blocks($is_mobile=FALSE)
 		{
 			$data['query'] = $this->get('priority');
 			$num_rows = $data['query']->num_rows();
+
 			if($num_rows>0)
 			{
-				$this->load->view('homepage_blocks', $data);
+				if($is_mobile==TRUE)
+				{
+					$view_file = 'homepage_blocks_jqm';
+				}else{
+					$view_file = 'homepage_blocks';
+				}
+
+				$this->load->view($view_file, $data);
 			} 
 		}
 

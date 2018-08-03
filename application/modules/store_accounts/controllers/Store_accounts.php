@@ -14,6 +14,44 @@
 			$this->form_validation->CI =& $this;
 		}
 
+		public function _get_shopper_address($update_id,$delimiter)
+		{
+			$data = $this->fetch_data_from_db($update_id);
+			$address = '';
+
+			if($data['address1'] != '')
+			{
+				$address.=$data['address1'];
+				$address.= $delimiter;
+			}
+
+			if($data['address2'] != '')
+			{
+				$address.=$data['address2'];
+				$address.= $delimiter;
+			}
+
+			if($data['town'] != '')
+			{
+				$address.=$data['town'];
+				$address.= $delimiter;
+			}
+
+			if($data['country'] != '')
+			{
+				$address.=$data['country'];
+				$address.= $delimiter;
+			}
+
+			if($data['postcode'] != '')
+			{
+				$address.=$data['postcode'];
+				$address.= $delimiter;
+			}
+
+			return $address;
+		}
+
 
 		public function deleteconf($update_id)
 		{
@@ -31,7 +69,7 @@
 			$this->templates->admin($data);
 		}
 
-			public function delete($update_id){
+		public function delete($update_id){
 			if(!is_numeric($update_id))
 			{
 				redirect(base_url('site_security/not_allowed'));
@@ -44,15 +82,53 @@
 				redirect(base_url('store_accounts/create/'.$update_id));
 			} elseif($submit == 'Yes - Delete')
 			{
+				$allowed = $this->_make_sure_delete_allowed($update_id);
+				if($allowed == FALSE)
+				{
+					$flash_msg = "You are not allowed to delete this account.";
+					$value = '<div class="alert alert-danger" role="alert">'.$flash_msg.'</div>';
+					$this->session->set_flashdata('item',$value);
+
+					redirect(base_url('store_accounts/manage'));
+				}
+
 				$this->_delete($update_id);
 
 				$flash_msg = "The store account entry was successfully deleted.";
 				$value = '<div class="alert alert-success" role="alert">'.$flash_msg.'</div>';
 				$this->session->set_flashdata('item',$value);
-			}
 
 				redirect(base_url('store_accounts/manage'));
+			}
 
+
+		}
+
+		public function _make_sure_delete_allowed($update_id)
+		{
+			//returns TRUE or FALSE
+			//do NOT allow delete IF shopper has item in basket (or shoppertrack)
+			$mysql_query = "select * from store_basket where shopper_id='$update_id'";
+			$query = $this->_custom_query($mysql_query);
+			$num_rows = $query->num_rows();
+
+
+			if($num_rows>0)
+			{
+				return FALSE; //ko xoa duoc vi co item trong gio hang
+			}else
+			{
+				$mysql_query = "select * from store_shoppertrack where shopper_id='$update_id'";
+				$query = $this->_custom_query($mysql_query);
+				$num_rows = $query->num_rows();
+
+				if($num_rows>0)
+				{
+					return FALSE; //ko xoa duoc vi co item trong gio hang
+				}
+			}
+
+			return TRUE; //duoc xoa
 		}
 
 		public function _generate_token($update_id)
@@ -430,7 +506,13 @@
 		{
 			$query = $this->mdl_store_accounts->get_with_limit($col,$value);
 			return $query;
-		}			
+		}	
+
+		public function get_max()
+		{
+			$query = $this->mdl_store_accounts->get_max();
+			return $query;
+		}				
 
 
 	}

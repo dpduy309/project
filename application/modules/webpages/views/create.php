@@ -8,6 +8,7 @@
 ?>
 
 
+<p><a href="<?= base_url('webpages/manage')?>"><button type="button" class="btn btn-default">Previous Page</button></a></p>
 
 
 

@@ -11,12 +11,42 @@
 			$this->load->module('store_items');
 			$this->load->module('store_item_sizes');
 			$this->load->module('store_item_colours');
+			$this->load->module('store_shoppertrack');
+
 
 			$this->load->model('mdl_store_basket');
 			$this->form_validation->CI =& $this;
 		}
 
-		
+		public function _avoid_cart_conflicts($data)
+		{
+			//makes sure no items on store_shoppertrack with same session ID and shopper ID
+			// If there are items on store_shoppertrack with same session and shopper ID, then regenerate session ID for this user
+			//update the data['session_id']
+
+			$original_session_id = $data['session_id'];
+			$shopper_id = $data['shopper_id'];
+
+			$col1 = 'session_id';
+			$value1 = $original_session_id;
+			$col2 = 'shopper_id';
+			$value2 = $shopper_id;
+
+			$query = $this->store_shoppertrack->get_with_double_condition($col1,$value1,$col2,$value2);
+			$num_rows = $query->num_rows();
+
+			if($num_rows>0)//items conflicting with shoppertrack
+			{
+				session_regenerate_id();
+
+				//update
+				$new_session_id = $this->session->session_id;
+ 				$data['session_id'] = $new_session_id;
+			}
+			return $data;
+
+		}
+
 		public function get_with_double_condition($col1,$value1,$col2,$value2)
 		{
 			$query = $this->mdl_store_basket->get_with_double_condition($col1,$value1,$col2,$value2);
@@ -79,6 +109,7 @@
 				if($this->form_validation->run() == TRUE)
 				{
 					$data = $this->fetch_the_data();
+					$data = $this->_avoid_cart_conflicts($data);
 					$this->_insert($data);
 					redirect(base_url('cart'));
 				}else{

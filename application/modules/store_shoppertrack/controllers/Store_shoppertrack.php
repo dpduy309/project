@@ -14,6 +14,12 @@
 			
 		}
 
+		public function get_with_double_condition($col1,$value1,$col2,$value2)
+		{
+			$query = $this->mdl_store_shoppertrack->get_with_double_condition($col1,$value1,$col2,$value2);
+			return $query;
+		}
+
 		public function _transfer_from_basket($customer_session_id)
 		{
 			$query = $this->store_basket->get_where_custom('session_id', $customer_session_id);
